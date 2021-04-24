@@ -54,7 +54,7 @@ public class CrossfadeMusicPlayer : MonoBehaviour
         {
             throw new System.Exception("No matching audio clip! (" + name + ")");
         }
-        if (mainAudioSource.clip == target.AudioClip)
+        if (mainAudioSource.clip == target.AudioClip || name == Playing)
         {
             return;
         }
@@ -86,6 +86,7 @@ public class CrossfadeMusicPlayer : MonoBehaviour
         if (seconderyAudioSource.clip != null)
         {
             count += Time.unscaledDeltaTime * FadeSpeed;
+            Debug.Log(count);
             if (count >= 1)
             {
                 AudioSource temp = mainAudioSource;
