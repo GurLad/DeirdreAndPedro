@@ -13,6 +13,19 @@ public class DistanceUI : MonoBehaviour
     }
     private void Update()
     {
-        text.text = "Dist.: " + Mathf.Abs(Mathf.Round(Player.transform.position.y));
+        int dist = (int)Mathf.Abs(Mathf.Round(Player.transform.position.y));
+        text.text = "Dist.: " + dist;
+        if (dist > 40)
+        {
+            CrossfadeMusicPlayer.Instance.Play("Game3");
+        }
+        else if (dist > 20)
+        {
+            CrossfadeMusicPlayer.Instance.Play("Game2");
+        }
+        else
+        {
+            CrossfadeMusicPlayer.Instance.Play("Game1");
+        }
     }
 }
