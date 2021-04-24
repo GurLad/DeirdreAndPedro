@@ -59,11 +59,18 @@ public class PlayerController : MonoBehaviour
             workingVelocity.x = Speed;
         }
         Vector2 TargetVelocity = new Vector2(target.x, 0) * Speed;
-        if (TargetVelocity == Vector2.zero)
+        if (TargetVelocity.x == 0)
         {
-            Vector2 force = -workingVelocity * ResetForce;
-            force.y = 0;
-            rigidbody.AddForce(force);
+            if (Mathf.Abs(workingVelocity.x) <= Accuracy)
+            {
+                workingVelocity.x = 0;
+            }
+            else
+            {
+                Vector2 force = Vector2.zero;
+                force.x = -Mathf.Sign(workingVelocity.x) * ResetForce;
+                rigidbody.AddForce(force);
+            }
         }
         else
         {
@@ -98,7 +105,7 @@ public class PlayerController : MonoBehaviour
         {
             Slave = false;
             rigidbody.velocity = new Vector2(0, -Mathf.Sign(YSpeed) * KnockbackForce);
-            Debug.Log(rigidbody.velocity);
+            collision.gameObject.GetComponent<Enemy>().AfterCollision();
         }
     }
 }
