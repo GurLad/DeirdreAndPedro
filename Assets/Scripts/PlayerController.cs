@@ -5,15 +5,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Horizontal movement vars")]
-    public float Speed;
     public float Force;
     public float ResetForce;
     public float Accuracy;
-    [Header("Stuff")]
+    [Header("Stats")]
+    public float XSpeed;
     public float YSpeed;
+    public float Health = 3;
+    public float BrakesUseRate = 1.5f;
+    public float BrakesRechargeRate = 0.75f;
+    [Header("Stuff")]
     public float KnockbackForce;
     public float RecoverSpeed;
     public PlayerController OtherPlayer;
+    [HideInInspector]
+    public float BrakesValue = 1;
     [SerializeField]
     private bool _slave = false;
     public bool Slave
@@ -29,16 +35,41 @@ public class PlayerController : MonoBehaviour
         }
     }
     private Rigidbody2D rigidbody;
+    private bool holdingBrakes;
+    private float baseYSpeed;
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         Application.targetFrameRate = 60;
         Slave = _slave;
+        baseYSpeed = YSpeed;
+        rigidbody.velocity = new Vector2(0, YSpeed);
     }
     private void FixedUpdate()
     {
         if (!Slave)
         {
+            if (Input.GetAxis("Vertical") < 0 && (BrakesValue >= 0.1f || (holdingBrakes && BrakesValue > 0)))
+            {
+                YSpeed = 0.25f * Mathf.Sign(baseYSpeed);
+                BrakesValue -= BrakesUseRate * Time.deltaTime;
+                if (BrakesValue < 0)
+                {
+                    BrakesValue = 0;
+                }
+                holdingBrakes = true;
+            }
+            else
+            {
+                YSpeed = baseYSpeed;
+                BrakesValue += BrakesRechargeRate * Time.deltaTime;
+                if (BrakesValue > 1)
+                {
+                    BrakesValue = 1;
+                }
+                holdingBrakes = false;
+            }
+            OtherPlayer.BrakesValue = BrakesValue;
             Move(new Vector2(Input.GetAxis("Horizontal"), YSpeed));
         }
         else
@@ -54,11 +85,11 @@ public class PlayerController : MonoBehaviour
         float tempY = rigidbody.velocity.y;
         Vector2 workingVelocity = rigidbody.velocity;
         // X stuff
-        if (workingVelocity.x > Speed)
+        if (workingVelocity.x > XSpeed)
         {
-            workingVelocity.x = Speed;
+            workingVelocity.x = XSpeed;
         }
-        Vector2 TargetVelocity = new Vector2(target.x, 0) * Speed;
+        Vector2 TargetVelocity = new Vector2(target.x, 0) * XSpeed;
         if (TargetVelocity.x == 0)
         {
             if (Mathf.Abs(workingVelocity.x) <= Accuracy)
@@ -93,7 +124,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            workingVelocity.y = tempY + target.y * Time.deltaTime * RecoverSpeed;
+            Vector2 force = new Vector2(0, -Mathf.Sign(tempY - target.y) * RecoverSpeed);
+            rigidbody.AddForce(force);
         }
         // Finish
         //Debug.Log(workingVelocity);
@@ -106,6 +138,12 @@ public class PlayerController : MonoBehaviour
             Slave = false;
             rigidbody.velocity = new Vector2(0, -Mathf.Sign(YSpeed) * KnockbackForce);
             collision.gameObject.GetComponent<Enemy>().AfterCollision();
+            Health--;
+            if (Health <= 0)
+            {
+                Destroy(gameObject);
+                Time.timeScale = 0;
+            }
         }
     }
 }

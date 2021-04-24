@@ -177,14 +177,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d70c50d2d4c91e43af6778caf8dff04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 7
   Force: 5
   ResetForce: 20
   Accuracy: 0.25
+  XSpeed: 7
   YSpeed: 3
-  KnockbackForce: 2
-  RecoverSpeed: 2
+  Health: 3
+  BrakesUseRate: 1.5
+  BrakesRechargeRate: 0.75
+  KnockbackForce: 4
+  RecoverSpeed: 4
   OtherPlayer: {fileID: 0}
+  BrakesValue: 1
   _slave: 0
 --- !u!1 &8002009457013129477
 GameObject:
