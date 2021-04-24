@@ -181,8 +181,11 @@ MonoBehaviour:
   Force: 1.5
   ResetForce: 0.75
   Accuracy: 0.25
-  YSpeed: 1
+  YSpeed: 2
+  KnockbackForce: 2
+  RecoverSpeed: 2
   OtherPlayer: {fileID: 0}
+  _slave: 0
 --- !u!1 &8002009457013129477
 GameObject:
   m_ObjectHideFlags: 0

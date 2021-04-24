@@ -8,9 +8,15 @@ public class ObjectGenerator : MonoBehaviour
     public Vector2 GenerateRange;
     public float Offset;
     public bool GenerateOnStart;
-    private float NextGenerated;
+    public bool Reverse;
+    private float nextGenerated;
     private void Start()
     {
+        if (Reverse)
+        {
+            Offset *= -1;
+            GenerateRange *= -1;
+        }
         if (GenerateOnStart)
         {
             while(CanGenerate())
@@ -20,7 +26,7 @@ public class ObjectGenerator : MonoBehaviour
         }
         else
         {
-            NextGenerated += Offset;
+            nextGenerated += Offset;
         }
     }
     private void Update()
@@ -32,13 +38,13 @@ public class ObjectGenerator : MonoBehaviour
     }
     private bool CanGenerate()
     {
-        return NextGenerated <= Offset + transform.position.y;
+        return nextGenerated * (Reverse ? -1 : 1) <= (Offset + transform.position.y) * (Reverse ? -1 : 1);
     }
     private void Generate()
     {
         GameObject generated = Instantiate(ToGenerate[Random.Range(0, ToGenerate.Count)]);
-        generated.transform.position = new Vector3(0, NextGenerated, generated.transform.position.z);
+        generated.transform.position = new Vector3(0, nextGenerated, generated.transform.position.z);
         generated.SetActive(true);
-        NextGenerated += Random.Range(GenerateRange.x, GenerateRange.y);
+        nextGenerated += Random.Range(GenerateRange.x, GenerateRange.y);
     }
 }

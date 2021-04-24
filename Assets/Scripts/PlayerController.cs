@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public float Accuracy;
     [Header("Stuff")]
     public float YSpeed;
+    public float KnockbackForce;
+    public float RecoverSpeed;
     public PlayerController OtherPlayer;
     [SerializeField]
     private bool _slave = false;
@@ -23,17 +25,17 @@ public class PlayerController : MonoBehaviour
         set
         {
             _slave = value;
-            rigidbody.isKinematic = Slave;
             OtherPlayer._slave = !Slave;
-            OtherPlayer.rigidbody.isKinematic = !Slave;
         }
     }
     private Rigidbody2D rigidbody;
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        Application.targetFrameRate = 60;
+        Slave = _slave;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (!Slave)
         {
@@ -41,49 +43,62 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            rigidbody.velocity = Vector3.zero;
+            rigidbody.velocity = Vector2.zero;
             Vector3 target = OtherPlayer.transform.position;
             target.y *= -1;
             transform.position = target;
         }
     }
-    private Vector2 Move(Vector2 target)
+    private void Move(Vector2 target)
     {
-        float tempY = target.y;
-        rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
-        if (rigidbody.velocity.magnitude > Speed)
+        float tempY = rigidbody.velocity.y;
+        Vector2 workingVelocity = rigidbody.velocity;
+        // X stuff
+        if (workingVelocity.x > Speed)
         {
-            rigidbody.velocity = rigidbody.velocity.normalized * Speed;
+            workingVelocity.x = Speed;
         }
-        rigidbody.velocity = new Vector2(rigidbody.velocity.x, tempY);
-        Vector2 TargetVelocity = target.normalized * Speed;
+        Vector2 TargetVelocity = new Vector2(target.x, 0) * Speed;
         if (TargetVelocity == Vector2.zero)
         {
-            Vector2 force = -rigidbody.velocity * ResetForce;
+            Vector2 force = -workingVelocity * ResetForce;
             force.y = 0;
             rigidbody.AddForce(force);
-            return Vector2.zero;
-        }
-        TargetVelocity.y = rigidbody.velocity.y;
-        if ((rigidbody.velocity - TargetVelocity).magnitude <= Accuracy)
-        {
-            rigidbody.velocity = TargetVelocity;
         }
         else
         {
-            Vector2 force = TargetVelocity * Force;
-            force.y = 0;
-            rigidbody.AddForce(force);
+            TargetVelocity.y = workingVelocity.y;
+            if ((workingVelocity - TargetVelocity).magnitude <= Accuracy)
+            {
+                workingVelocity = TargetVelocity;
+            }
+            else
+            {
+                Vector2 force = TargetVelocity * Force;
+                force.y = 0;
+                rigidbody.AddForce(force);
+            }
         }
-        Vector2 temp = rigidbody.velocity;
-        temp.y = 0;
-        return temp.normalized;
+        // Y stuff
+        if (Mathf.Abs(tempY - target.y) <= Accuracy)
+        {
+            workingVelocity.y = target.y;
+        }
+        else
+        {
+            workingVelocity.y = tempY + target.y * Time.deltaTime * RecoverSpeed;
+        }
+        // Finish
+        //Debug.Log(workingVelocity);
+        rigidbody.velocity = workingVelocity;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.tag == "Enemy")
         {
             Slave = false;
+            rigidbody.velocity = new Vector2(0, -Mathf.Sign(YSpeed) * KnockbackForce);
+            Debug.Log(rigidbody.velocity);
         }
     }
 }
