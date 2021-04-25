@@ -119,7 +119,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 441124d38b641bc49bc99c0b14402717, type: 3}
   - {fileID: 21300000, guid: e334dc93fd3c4ad4c9e91acd37ee5997, type: 3}
   Health: 0
-  DestroyParticle: {fileID: 6255126386056235329, guid: 702661323aff33a4397b9705168e9a3d, type: 3}
+  DestroyParticle: {fileID: 8477246021809954283, guid: 4b3bfb6953ddd4946bc54e5f97284206, type: 3}
 --- !u!50 &2684734446881379947
 Rigidbody2D:
   serializedVersion: 4
@@ -416,9 +416,12 @@ MonoBehaviour:
   BrakesSprites:
   - {fileID: 21300000, guid: cd5779fd046ff1e4a9fb518e38b7c722, type: 3}
   - {fileID: 21300000, guid: e37ffd5b6df36cb4cb4cff1d20ea8f62, type: 3}
+  ExtraEnemy: {fileID: 0}
+  ExtraEnemyDesiredGenerator: {fileID: 0}
   KnockbackForce: 4
   RecoverSpeed: 4
   OtherPlayer: {fileID: 0}
+  GameOverScreen: {fileID: 0}
   BrakesValue: 1
   CanBrake: 0
   _slave: 0

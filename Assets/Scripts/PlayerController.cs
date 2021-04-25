@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
     [Header("Brakes")]
     public SpriteRenderer BrakesObject;
     public Sprite[] BrakesSprites;
+    [Header("High Dist Mods")]
+    public GameObject ExtraEnemy;
+    public ObjectGenerator ExtraEnemyDesiredGenerator;
     [Header("Stuff")]
     public float KnockbackForce;
     public float RecoverSpeed;
@@ -106,6 +109,10 @@ public class PlayerController : MonoBehaviour
             if (Distance >= 90)
             {
                 CrossfadeMusicPlayer.Instance.Play("Game3");
+                if (!ExtraEnemyDesiredGenerator.ToGenerate.Contains(ExtraEnemy))
+                {
+                    ExtraEnemyDesiredGenerator.ToGenerate.Add(ExtraEnemy);
+                }
             }
             else if (Distance >= 40)
             {

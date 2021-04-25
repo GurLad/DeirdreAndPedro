@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class FallingEnemy : Enemy
 {
-    // Start is called before the first frame update
-    void Start()
+    public float Speed;
+    protected override void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Start();
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, Speed);
     }
 }
