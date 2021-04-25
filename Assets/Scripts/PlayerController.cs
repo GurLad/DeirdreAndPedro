@@ -14,12 +14,17 @@ public class PlayerController : MonoBehaviour
     public float Health = 3;
     public float BrakesUseRate = 1.5f;
     public float BrakesRechargeRate = 0.75f;
+    [Header("Brakes")]
+    public SpriteRenderer BrakesObject;
+    public Sprite[] BrakesSprites;
     [Header("Stuff")]
     public float KnockbackForce;
     public float RecoverSpeed;
     public PlayerController OtherPlayer;
     [HideInInspector]
     public float BrakesValue = 1;
+    [HideInInspector]
+    public bool CanBrake;
     [SerializeField]
     private bool _slave = false;
     public bool Slave
@@ -34,40 +39,63 @@ public class PlayerController : MonoBehaviour
             OtherPlayer._slave = !Slave;
         }
     }
+    public int Distance
+    {
+        get
+        {
+            return (int)Mathf.Abs(Mathf.Round(transform.position.y));
+        }
+    }
     private Rigidbody2D rigidbody;
     private bool holdingBrakes;
     private float baseYSpeed;
+    private float trueYSpeed
+    {
+        get
+        {
+            return baseYSpeed * (1 + Distance / 150f);
+        }
+    }
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         Application.targetFrameRate = 60;
         Slave = _slave;
         baseYSpeed = YSpeed;
-        rigidbody.velocity = new Vector2(0, YSpeed);
+        //rigidbody.velocity = new Vector2(0, YSpeed);
     }
     private void FixedUpdate()
     {
         if (!Slave)
         {
-            if (Input.GetAxis("Vertical") < 0 && (BrakesValue >= 0.1f || (holdingBrakes && BrakesValue > 0)))
+            if (CanBrake)
             {
-                YSpeed = 0.25f * Mathf.Sign(baseYSpeed);
-                BrakesValue -= BrakesUseRate * Time.deltaTime;
-                if (BrakesValue < 0)
+                if (Input.GetAxis("Vertical") < 0 && (BrakesValue >= 0.1f || (holdingBrakes && BrakesValue > 0)))
                 {
-                    BrakesValue = 0;
+                    OtherPlayer.BrakesObject.sprite = BrakesObject.sprite = BrakesSprites[1];
+                    YSpeed = 0.25f * Mathf.Sign(baseYSpeed);
+                    BrakesValue -= BrakesUseRate * Time.deltaTime;
+                    if (BrakesValue < 0)
+                    {
+                        BrakesValue = 0;
+                    }
+                    holdingBrakes = true;
                 }
-                holdingBrakes = true;
+                else
+                {
+                    OtherPlayer.BrakesObject.sprite = BrakesObject.sprite = BrakesSprites[0];
+                    YSpeed = trueYSpeed;
+                    BrakesValue += BrakesRechargeRate * Time.deltaTime;
+                    if (BrakesValue > 1)
+                    {
+                        BrakesValue = 1;
+                    }
+                    holdingBrakes = false;
+                }
             }
             else
             {
-                YSpeed = baseYSpeed;
-                BrakesValue += BrakesRechargeRate * Time.deltaTime;
-                if (BrakesValue > 1)
-                {
-                    BrakesValue = 1;
-                }
-                holdingBrakes = false;
+                YSpeed = trueYSpeed;
             }
             OtherPlayer.BrakesValue = BrakesValue;
             Move(new Vector2(Input.GetAxis("Horizontal"), YSpeed));

@@ -13,7 +13,7 @@ public class DistanceUI : MonoBehaviour
     }
     private void Update()
     {
-        int dist = (int)Mathf.Abs(Mathf.Round(Player.transform.position.y));
+        int dist = Player.Distance;
         text.text = "Dist.: " + dist;
         if (dist > 40)
         {

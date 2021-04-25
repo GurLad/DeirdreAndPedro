@@ -86,7 +86,6 @@ public class CrossfadeMusicPlayer : MonoBehaviour
         if (seconderyAudioSource.clip != null)
         {
             count += Time.unscaledDeltaTime * FadeSpeed;
-            Debug.Log(count);
             if (count >= 1)
             {
                 AudioSource temp = mainAudioSource;
