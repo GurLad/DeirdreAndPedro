@@ -15,7 +15,6 @@ public class UpgradeController : MonoBehaviour
     public ShieldController Shield; // TBA: Replace with code
     private void Start()
     {
-        PlayerPrefs.SetInt("Shield" + InternalName, 2);
         // Health
         int health = PlayerPrefs.GetInt("Health" + InternalName);
         ContainerObject.sprite = Containers[health];
@@ -38,7 +37,7 @@ public class UpgradeController : MonoBehaviour
         }
         else
         {
-            Destroy(Shield);
+            Destroy(Shield.gameObject);
         }
     }
 }

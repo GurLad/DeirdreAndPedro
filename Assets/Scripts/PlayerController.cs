@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public float KnockbackForce;
     public float RecoverSpeed;
     public PlayerController OtherPlayer;
+    public GameObject GameOverScreen;
     [HideInInspector]
     public float BrakesValue = 1;
     [HideInInspector]
@@ -68,6 +69,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!Slave)
         {
+            // Brake
             if (CanBrake)
             {
                 if (Input.GetAxis("Vertical") < 0 && (BrakesValue >= 0.1f || (holdingBrakes && BrakesValue > 0)))
@@ -97,8 +99,22 @@ public class PlayerController : MonoBehaviour
             {
                 YSpeed = trueYSpeed;
             }
+            // Move
             OtherPlayer.BrakesValue = BrakesValue;
             Move(new Vector2(Input.GetAxis("Horizontal"), YSpeed));
+            // Speed!
+            if (Distance >= 175)
+            {
+                CrossfadeMusicPlayer.Instance.Play("Game3");
+            }
+            else if (Distance >= 100)
+            {
+                CrossfadeMusicPlayer.Instance.Play("Game2");
+            }
+            else
+            {
+                CrossfadeMusicPlayer.Instance.Play("Game1");
+            }
         }
         else
         {
@@ -169,8 +185,16 @@ public class PlayerController : MonoBehaviour
             Health--;
             if (Health <= 0)
             {
-                Destroy(gameObject);
-                Time.timeScale = 0;
+                gameObject.SetActive(false);
+                OtherPlayer.enabled = false;
+                //Time.timeScale = 0;
+                PlayerPrefs.SetInt("Points", PlayerPrefs.GetInt("Points") + Distance);
+                if (PlayerPrefs.GetInt("HighScore") < Distance)
+                {
+                    PlayerPrefs.SetInt("HighScore", Distance);
+                }
+                //GameOverScreen.SetActive(true);
+                SceneLoader.LoadScene("UpgradeMenu");
             }
         }
     }
