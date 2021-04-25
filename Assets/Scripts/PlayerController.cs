@@ -109,6 +109,11 @@ public class PlayerController : MonoBehaviour
             // Speed!
             if (Distance >= 150 && PlayerPrefs.GetInt("Freeplay") != 1)
             {
+                PlayerPrefs.SetInt("Points", PlayerPrefs.GetInt("Points") + Distance);
+                if (PlayerPrefs.GetInt("HighScore") < Distance)
+                {
+                    PlayerPrefs.SetInt("HighScore", Distance);
+                }
                 PlayerPrefs.SetInt("Freeplay", 1);
                 SceneLoader.LoadScene("Win");
             }

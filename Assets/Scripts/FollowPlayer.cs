@@ -7,6 +7,11 @@ public class FollowPlayer : MonoBehaviour
     public float Smooth;
     public Transform ToFollow;
     public Vector3 Offset;
+    private void Start()
+    {
+        Vector3 Target = new Vector3(transform.position.x, ToFollow.transform.position.y + Offset.y, transform.position.z);
+        transform.position = Target;
+    }
     private void FixedUpdate()
     {
         Vector3 Target = new Vector3(transform.position.x, 0, transform.position.z);
