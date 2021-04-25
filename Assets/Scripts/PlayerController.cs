@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour
     public float KnockbackForce;
     public float RecoverSpeed;
     public PlayerController OtherPlayer;
-    public GameObject GameOverScreen;
+    public GameOverShowPointsAndStuff GameOverScreen;
+    public AudioClip Ouch;
     [HideInInspector]
     public float BrakesValue = 1;
     [HideInInspector]
@@ -190,18 +191,21 @@ public class PlayerController : MonoBehaviour
             rigidbody.velocity = new Vector2(0, -Mathf.Sign(YSpeed) * KnockbackForce);
             collision.gameObject.GetComponent<Enemy>().AfterCollision();
             Health--;
+            SoundController.PlaySound(Ouch, name == "Pedro" ? 0.5f : 1.5f);
             if (Health <= 0)
             {
                 gameObject.SetActive(false);
                 OtherPlayer.enabled = false;
+                OtherPlayer.rigidbody.velocity = Vector2.zero;
+                OtherPlayer.rigidbody.isKinematic = true;
                 //Time.timeScale = 0;
                 PlayerPrefs.SetInt("Points", PlayerPrefs.GetInt("Points") + Distance);
                 if (PlayerPrefs.GetInt("HighScore") < Distance)
                 {
                     PlayerPrefs.SetInt("HighScore", Distance);
                 }
-                //GameOverScreen.SetActive(true);
-                SceneLoader.LoadScene("UpgradeMenu");
+                GameOverScreen.Init(Distance);
+                //SceneLoader.LoadScene("UpgradeMenu");
             }
         }
     }

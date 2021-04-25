@@ -148,10 +148,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cost: 0
+  Description: 
   PlayerPrefName: 
   PlayerInternalName: 
   UniqueID: 
   BoughtColor: {r: 0, g: 0.97121596, b: 1, a: 1}
+  BoughtSFX: {fileID: 8300000, guid: 32aa2dca93c9bae44921ce7617ef3b2e, type: 3}
 --- !u!1 &7945303544774921751
 GameObject:
   m_ObjectHideFlags: 0

@@ -422,6 +422,7 @@ MonoBehaviour:
   RecoverSpeed: 4
   OtherPlayer: {fileID: 0}
   GameOverScreen: {fileID: 0}
+  Ouch: {fileID: 8300000, guid: 2de2cc28d524e6c4db367befacbdbab1, type: 3}
   BrakesValue: 1
   CanBrake: 0
   _slave: 0

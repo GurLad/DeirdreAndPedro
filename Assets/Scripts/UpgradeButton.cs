@@ -13,6 +13,7 @@ public class UpgradeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public string PlayerInternalName;
     public string UniqueID;
     public Color BoughtColor;
+    public AudioClip BoughtSFX;
     private Text text;
     private Button button;
     private Image image;
@@ -48,6 +49,7 @@ public class UpgradeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         PlayerPrefs.SetInt(PlayerPrefName + PlayerInternalName, PlayerPrefs.GetInt(PlayerPrefName + PlayerInternalName) + 1);
         Bought = true;
         image.color = BoughtColor;
+        SoundController.PlaySound(BoughtSFX);
         UpgradeMenu.Current.PostBuy();
     }
     public void OnPointerEnter(PointerEventData eventData)
