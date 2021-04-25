@@ -103,11 +103,11 @@ public class PlayerController : MonoBehaviour
             OtherPlayer.BrakesValue = BrakesValue;
             Move(new Vector2(Input.GetAxis("Horizontal"), YSpeed));
             // Speed!
-            if (Distance >= 175)
+            if (Distance >= 90)
             {
                 CrossfadeMusicPlayer.Instance.Play("Game3");
             }
-            else if (Distance >= 100)
+            else if (Distance >= 40)
             {
                 CrossfadeMusicPlayer.Instance.Play("Game2");
             }
