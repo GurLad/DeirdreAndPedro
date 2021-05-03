@@ -208,6 +208,7 @@ public class PlayerController : MonoBehaviour
                 OtherPlayer.enabled = false;
                 OtherPlayer.rigidbody.velocity = Vector2.zero;
                 OtherPlayer.rigidbody.isKinematic = true;
+                OtherPlayer.GetComponentInChildren<Collider2D>().enabled = false;
                 //Time.timeScale = 0;
                 PlayerPrefs.SetInt("Points", PlayerPrefs.GetInt("Points") + Distance);
                 if (PlayerPrefs.GetInt("HighScore") < Distance)

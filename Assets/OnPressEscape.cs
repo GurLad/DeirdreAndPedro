@@ -7,7 +7,7 @@ public class OnPressEscape : MonoBehaviour
     public GameObject PauseMenu;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
         {
             if (PauseMenu != null)
             {
@@ -24,7 +24,7 @@ public class OnPressEscape : MonoBehaviour
             }
             else
             {
-                SceneLoader.LoadScene("MainMenu");
+                //SceneLoader.LoadScene("MainMenu"); // Annoying. People can quit at any time anyway since it isn't fullscreen.
             }
         }
     }
